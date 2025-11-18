@@ -9,6 +9,7 @@
     "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:api": "node -r tsx/register scripts/test-api.ts",
     "lint": "eslint . --ext .ts",
     "type-check": "tsc --noEmit",
     "db:migrate": "node -r tsx/register scripts/migrate.ts",

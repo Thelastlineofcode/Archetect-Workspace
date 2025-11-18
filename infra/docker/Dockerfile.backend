@@ -1,0 +1,108 @@
+# Archetect Backend Dockerfile
+# Multi-stage build for production optimization
+
+# ============================================================================
+# BASE STAGE
+# ============================================================================
+FROM node:20-alpine AS base
+
+# Install Python for astrology engine
+RUN apk add --no-cache python3 py3-pip
+
+WORKDIR /app
+
+# ============================================================================
+# DEPENDENCIES STAGE
+# ============================================================================
+FROM base AS dependencies
+
+# Copy package files
+COPY src/backend/package*.json ./backend/
+COPY src/shared/package*.json ./shared/
+
+# Install dependencies
+WORKDIR /app/backend
+RUN npm ci --only=production && npm cache clean --force
+
+WORKDIR /app/shared
+RUN npm ci --only=production && npm cache clean --force
+
+# Install Python dependencies
+WORKDIR /app/backend
+COPY src/backend/astrology_engine/requirements.txt ./astrology_engine/
+RUN pip3 install --no-cache-dir -r ./astrology_engine/requirements.txt
+
+# ============================================================================
+# BUILD STAGE
+# ============================================================================
+FROM base AS build
+
+# Copy dependencies from previous stage
+COPY --from=dependencies /app/backend/node_modules ./backend/node_modules
+COPY --from=dependencies /app/shared/node_modules ./shared/node_modules
+
+# Copy source code
+COPY src/backend ./backend
+COPY src/shared ./shared
+
+# Build TypeScript
+WORKDIR /app/shared
+RUN npm run build
+
+WORKDIR /app/backend
+RUN npm run build
+
+# ============================================================================
+# PRODUCTION STAGE
+# ============================================================================
+FROM base AS production
+
+ENV NODE_ENV=production
+
+# Copy built artifacts and dependencies
+COPY --from=dependencies /app/backend/node_modules ./backend/node_modules
+COPY --from=dependencies /app/shared/node_modules ./shared/node_modules
+COPY --from=build /app/backend/dist ./backend/dist
+COPY --from=build /app/shared/dist ./shared/dist
+COPY --from=dependencies /usr/lib/python3.* /usr/lib/python3.*
+COPY src/backend/astrology_engine ./backend/astrology_engine
+
+WORKDIR /app/backend
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+USER nodejs
+
+EXPOSE 3000
+
+CMD ["node", "dist/index.js"]
+
+# ============================================================================
+# DEVELOPMENT STAGE
+# ============================================================================
+FROM base AS development
+
+ENV NODE_ENV=development
+
+# Install all dependencies (including dev dependencies)
+COPY src/backend/package*.json ./backend/
+COPY src/shared/package*.json ./shared/
+
+WORKDIR /app/backend
+RUN npm install
+
+WORKDIR /app/shared
+RUN npm install
+
+# Install Python dependencies
+WORKDIR /app/backend
+COPY src/backend/astrology_engine/requirements.txt ./astrology_engine/
+RUN pip3 install --no-cache-dir -r ./astrology_engine/requirements.txt
+
+WORKDIR /app
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

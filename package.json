@@ -1,0 +1,82 @@
+{
+  "name": "archetect-workspace",
+  "version": "0.1.0",
+  "description": "Personality Intelligence Platform for Authentic Communication - Combining astrological and psychological profiling for unprecedented accuracy in team dynamics",
+  "private": true,
+  "author": "Archetect Team",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Thelastlineofcode/Archetect-Workspace.git"
+  },
+  "workspaces": [
+    "src/backend",
+    "src/frontend",
+    "src/chrome_extension",
+    "src/shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd src/backend && npm run dev",
+    "dev:frontend": "cd src/frontend && npm run dev",
+    "dev:extension": "cd src/chrome_extension && npm run dev",
+    "build": "npm run build:backend && npm run build:frontend && npm run build:extension",
+    "build:backend": "cd src/backend && npm run build",
+    "build:frontend": "cd src/frontend && npm run build",
+    "build:extension": "cd src/chrome_extension && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd src/backend && npm run test",
+    "test:frontend": "cd src/frontend && npm run test",
+    "test:e2e": "playwright test",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd src/backend && npm run lint",
+    "lint:frontend": "cd src/frontend && npm run lint",
+    "db:migrate": "cd src/backend && npm run db:migrate",
+    "db:seed": "cd src/backend && npm run db:seed",
+    "db:reset": "cd src/backend && npm run db:reset",
+    "astro:test": "cd src/backend && python -m pytest tests/astrology",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0",
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "personality",
+    "astrology",
+    "DISC",
+    "big-five",
+    "OCEAN",
+    "team-dynamics",
+    "communication",
+    "CRM-integration",
+    "chrome-extension",
+    "personality-assessment"
+  ],
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2
+  }
+}

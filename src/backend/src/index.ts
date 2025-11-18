@@ -73,11 +73,28 @@ app.use('/api/v1', routes);
 app.get('/api/v1', (req, res) => {
   res.json({
     message: 'Archetect API v1',
+    version: '0.1.0',
     documentation: '/api/v1/docs',
     endpoints: {
-      auth: '/api/v1/auth',
-      profiles: '/api/v1/profiles',
-      questionnaire: '/api/v1/profiles/questionnaire',
+      auth: {
+        signup: 'POST /api/v1/auth/signup',
+        login: 'POST /api/v1/auth/login',
+        refresh: 'POST /api/v1/auth/refresh',
+        logout: 'POST /api/v1/auth/logout',
+        me: 'GET /api/v1/auth/me',
+      },
+      profiles: {
+        questionnaire: 'GET /api/v1/profiles/questionnaire',
+        create: 'POST /api/v1/profiles',
+        getMe: 'GET /api/v1/profiles/me',
+        getById: 'GET /api/v1/profiles/:id',
+        update: 'PUT /api/v1/profiles/:id',
+        delete: 'DELETE /api/v1/profiles/:id',
+      },
+      compatibility: {
+        pair: 'POST /api/v1/compatibility/pair',
+        team: 'POST /api/v1/compatibility/team',
+      },
     },
   });
 });

@@ -13,21 +13,30 @@ import type { DISCType, ArchetectType, EnergyStyle, FlowMode, Season, Modality, 
 export const DISC_TYPES: DISCType[] = ['D', 'I', 'S', 'C'];
 
 export const ARCHETECT_TYPES: ArchetectType[] = [
-  'Trailblazer',
-  'Anchor',
-  'Bridge',
-  'Seer',
-  'Builder',
-  'Connector',
-  'Strategist',
-  'Visionary',
+  'Architect',
+  'Maverick',
+  'Sage',
 ];
 
-export const ENERGY_STYLES: EnergyStyle[] = ['Spark', 'Stone', 'Signal', 'Current'];
+export const ENERGY_STYLES: EnergyStyle[] = [
+  'Energetic',
+  'Focused',
+  'Balanced',
+];
 
-export const FLOW_MODES: FlowMode[] = ['Initiator', 'Keeper', 'Shifter'];
+export const FLOW_MODES: FlowMode[] = [
+  'Structured',
+  'Deep Work',
+  'Exploration',
+  'Collaboration',
+];
 
-export const SEASONS: Season[] = ['Build', 'Explore', 'Connect', 'Reset'];
+export const SEASONS: Season[] = [
+  'Spring',
+  'Summer',
+  'Autumn',
+  'Winter',
+];
 
 export const MODALITIES: Modality[] = ['Cardinal', 'Fixed', 'Mutable'];
 

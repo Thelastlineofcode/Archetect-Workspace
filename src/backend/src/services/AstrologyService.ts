@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import * as path from 'path';
-import config from '../config';
+import { config } from '../config';
 import logger from '../utils/logger';
 import { Zodiac, Nakshatra, SiderealData } from '@archetect/shared/types';
 

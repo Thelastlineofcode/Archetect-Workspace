@@ -15,6 +15,8 @@ export type OAuthProvider = 'google' | 'github' | 'linkedin';
 export interface User {
   id: string;
   email: string;
+  passwordHash: string;
+  fullName?: string;
   firstName: string | null;
   lastName: string | null;
   createdAt: Date;
@@ -32,26 +34,24 @@ export type ProfileApproach = 'astrological' | 'big_five';
 
 export type DISCType = 'D' | 'I' | 'S' | 'C';
 
-export type ArchetectType =
-  | 'Trailblazer'
-  | 'Anchor'
-  | 'Bridge'
-  | 'Seer'
-  | 'Builder'
-  | 'Connector'
-  | 'Strategist'
-  | 'Visionary';
+export type ArchetectType = 'Architect' | 'Maverick' | 'Sage';
 
-export type EnergyStyle = 'Spark' | 'Stone' | 'Signal' | 'Current';
+export type EnergyStyle = 'Energetic' | 'Focused' | 'Balanced';
 
-export type FlowMode = 'Initiator' | 'Keeper' | 'Shifter';
+export type FlowMode =
+  | 'Structured'
+  | 'Deep Work'
+  | 'Exploration'
+  | 'Collaboration';
 
-export type Season = 'Build' | 'Explore' | 'Connect' | 'Reset';
+export type Season = 'Spring' | 'Summer' | 'Autumn' | 'Winter';
 
 export type ZodiacSign =
   | 'Aries' | 'Taurus' | 'Gemini' | 'Cancer'
   | 'Leo' | 'Virgo' | 'Libra' | 'Scorpio'
   | 'Sagittarius' | 'Capricorn' | 'Aquarius' | 'Pisces';
+
+export type Zodiac = ZodiacSign; // Alias for backward compatibility
 
 export type Modality = 'Cardinal' | 'Fixed' | 'Mutable';
 
@@ -112,6 +112,12 @@ export interface BigFiveTraits {
   neuroticism: number; // 0-100
 }
 
+export interface BigFiveTrait {
+  trait: 'openness' | 'conscientiousness' | 'extraversion' |
+         'agreeableness' | 'neuroticism';
+  score: number; // 0-1 normalized score
+}
+
 export interface QuestionnaireResponse {
   itemId: number;
   value: number; // 1-5 Likert scale
@@ -162,6 +168,7 @@ export interface Profile {
 
   // Common output (both approaches)
   personalityType: string; // DISC type or Archetect Type
+  archetectType?: ArchetectType; // For Big Five approach
   energyStyle?: EnergyStyle;
   flowMode?: FlowMode;
   seasonName?: Season;

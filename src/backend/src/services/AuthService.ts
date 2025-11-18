@@ -2,7 +2,7 @@ import { userRepository, refreshTokenRepository } from '../db/repositories';
 import { JWTUtil, TokenPair } from '../utils/jwt';
 import { User, OAuthProvider } from '@archetect/shared/types';
 import { ValidationError, AuthenticationError } from '../middleware/errorHandler';
-import { validateEmail, validatePassword } from '@archetect/shared/utils';
+import { isValidEmail, isValidPassword } from '@archetect/shared/utils';
 import bcrypt from 'bcrypt';
 import logger from '../utils/logger';
 
@@ -29,11 +29,11 @@ export class AuthService {
     const { email, password, fullName } = params;
 
     // Validate input
-    if (!validateEmail(email)) {
+    if (!isValidEmail(email)) {
       throw new ValidationError('Invalid email address');
     }
 
-    const passwordValidation = validatePassword(password);
+    const passwordValidation = isValidPassword(password);
     if (!passwordValidation.isValid) {
       throw new ValidationError(
         passwordValidation.errors?.join(', ') || 'Invalid password'
@@ -87,7 +87,7 @@ export class AuthService {
     const { email, password } = params;
 
     // Validate input
-    if (!validateEmail(email)) {
+    if (!isValidEmail(email)) {
       throw new ValidationError('Invalid email address');
     }
 
@@ -251,7 +251,7 @@ export class AuthService {
     }
 
     // Validate new password
-    const passwordValidation = validatePassword(newPassword);
+    const passwordValidation = isValidPassword(newPassword);
     if (!passwordValidation.isValid) {
       throw new ValidationError(
         passwordValidation.errors?.join(', ') || 'Invalid password'

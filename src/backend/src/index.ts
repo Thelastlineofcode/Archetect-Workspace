@@ -12,10 +12,8 @@ import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
 import { rateLimiter } from './middleware/rateLimiter';
 
-// Import routes (to be created)
-// import authRoutes from './routes/auth';
-// import profileRoutes from './routes/profiles';
-// import compatibilityRoutes from './routes/compatibility';
+// Import routes
+import routes from './routes';
 
 const app = express();
 
@@ -69,11 +67,9 @@ app.get('/api/health', (req, res) => {
 // ============================================================================
 
 // API v1 routes
-// app.use('/api/v1/auth', authRoutes);
-// app.use('/api/v1/profiles', profileRoutes);
-// app.use('/api/v1/compatibility', compatibilityRoutes);
+app.use('/api/v1', routes);
 
-// Placeholder route
+// API root
 app.get('/api/v1', (req, res) => {
   res.json({
     message: 'Archetect API v1',
@@ -81,11 +77,7 @@ app.get('/api/v1', (req, res) => {
     endpoints: {
       auth: '/api/v1/auth',
       profiles: '/api/v1/profiles',
-      compatibility: '/api/v1/compatibility',
-      communicationTips: '/api/v1/communication-tips',
-      meetingPrep: '/api/v1/meeting-prep',
-      enrichment: '/api/v1/enrichment',
-      crm: '/api/v1/crm',
+      questionnaire: '/api/v1/profiles/questionnaire',
     },
   });
 });

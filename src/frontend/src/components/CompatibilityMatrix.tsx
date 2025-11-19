@@ -153,7 +153,9 @@ export function CompatibilityMatrix({ profiles, pairScores }: CompatibilityMatri
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-red-400" />
-          <span className="text-xs text-gray-600">Low (<20%)</span>
+          <span className="text-xs text-gray-600">
+            Low (&lt;20%)
+          </span>
         </div>
       </div>
     </div>

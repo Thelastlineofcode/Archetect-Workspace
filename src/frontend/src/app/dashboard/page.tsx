@@ -104,16 +104,21 @@ function DashboardContent() {
                   <h3 className="text-xl font-bold text-gray-900">Your Strengths</h3>
                 </div>
                 <ul className="space-y-3">
-                  {profile.strengths.map((strength, index) => (
-                    <li key={index} className="flex items-start gap-3 group">
-                      <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-sm">
-                        ✓
-                      </span>
-                      <span className="text-gray-700 group-hover:text-gray-900 transition-colors">
-                        {strength}
-                      </span>
-                    </li>
-                  ))}
+                  {profile.strengths.map(
+                    (strength: string, index: number) => (
+                      <li
+                        key={index}
+                        className="flex items-start gap-3 group"
+                      >
+                        <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-sm">
+                          ✓
+                        </span>
+                        <span className="text-gray-700 group-hover:text-gray-900 transition-colors">
+                          {strength}
+                        </span>
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
 
@@ -124,9 +129,13 @@ function DashboardContent() {
                   <h3 className="text-xl font-bold text-gray-900">Growth Areas</h3>
                 </div>
                 <ul className="space-y-3">
-                  {profile.challenges.map((challenge, index) => (
-                    <li key={index} className="flex items-start gap-3 group">
-                      <span className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">
+                  {profile.challenges.map(
+                    (challenge: string, index: number) => (
+                      <li
+                        key={index}
+                        className="flex items-start gap-3 group"
+                      >
+                        <span className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">
                         →
                       </span>
                       <span className="text-gray-700 group-hover:text-gray-900 transition-colors">

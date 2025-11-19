@@ -13,7 +13,7 @@ class Database {
       database: config.database.name,
       user: config.database.user,
       password: config.database.password,
-      max: config.database.poolSize,
+      max: config.database.poolMax,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000,
     });
@@ -43,7 +43,7 @@ class Database {
     return this.pool;
   }
 
-  public async query<T = any>(
+  public async query<T extends Record<string, any> = any>(
     text: string,
     params?: any[]
   ): Promise<QueryResult<T>> {

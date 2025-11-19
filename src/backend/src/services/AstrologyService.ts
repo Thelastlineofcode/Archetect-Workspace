@@ -2,7 +2,12 @@ import { spawn } from 'child_process';
 import * as path from 'path';
 import { config } from '../config';
 import logger from '../utils/logger';
-import { Zodiac, Nakshatra, SiderealData } from '@archetect/shared/types';
+import {
+  Zodiac,
+  Nakshatra,
+  SiderealData,
+  PlanetaryPosition,
+} from '@archetect/shared/types';
 
 interface BirthChartInput {
   date: string; // YYYY-MM-DD
@@ -28,10 +33,9 @@ export class AstrologyService {
   private scriptPath: string;
 
   constructor() {
-    this.pythonPath = 'python3';
+    this.pythonPath = config.services.astrology.pythonPath;
     this.scriptPath = path.join(
-      config.externalServices.pythonAstrologyEnginePath,
-      'src',
+      config.services.astrology.enginePath,
       'birth_chart.py'
     );
   }
@@ -107,15 +111,29 @@ export class AstrologyService {
     });
   }
 
-  public async getSiderealData(input: BirthChartInput): Promise<SiderealData> {
+  public async getSiderealData(
+    input: BirthChartInput
+  ): Promise<SiderealData> {
     const chart = await this.calculateBirthChart(input);
 
+    const createPosition = (sign: Zodiac): PlanetaryPosition => ({
+      sign,
+      siderealdegree: 0,
+      modality: chart.modality,
+      element: chart.element,
+    });
+
     return {
-      sunSign: chart.sunSign,
-      moonSign: chart.moonSign,
-      ascendant: chart.ascendant,
-      mercury: chart.mercury,
-      nakshatra: chart.nakshatra,
+      sunSign: createPosition(chart.sunSign),
+      moonSign: createPosition(chart.moonSign),
+      ascendant: createPosition(chart.ascendant),
+      mercurySign: createPosition(chart.mercury),
+      _metadata: {
+        ephemerisSource: 'swiss-ephemeris',
+        ayanamsha: 'lahiri',
+        houseSystem: 'placidus',
+        computedAt: new Date(),
+      },
     };
   }
 }

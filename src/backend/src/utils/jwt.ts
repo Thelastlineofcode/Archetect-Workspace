@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 import { config } from '../config';
 import { randomBytes } from 'crypto';
 
-export interface JWTPayload {
+export interface JWTPayload extends JwtPayload {
   userId: string;
   email: string;
   subscriptionTier: string;
@@ -21,11 +21,15 @@ export class JWTUtil {
   private static refreshTokenExpiry = config.jwt.refreshExpiresIn;
 
   public static generateAccessToken(payload: JWTPayload): string {
-    return jwt.sign(payload, this.accessTokenSecret, {
-      expiresIn: this.accessTokenExpiry,
-      issuer: 'archetect-api',
-      audience: 'archetect-users',
-    });
+    return jwt.sign(
+      payload as object,
+      this.accessTokenSecret,
+      {
+        expiresIn: this.accessTokenExpiry as any,
+        issuer: 'archetect-api',
+        audience: 'archetect-users',
+      }
+    );
   }
 
   public static generateRefreshToken(): string {

@@ -33,10 +33,10 @@ export class AuthService {
       throw new ValidationError('Invalid email address');
     }
 
-    const passwordValidation = isValidPassword(password);
-    if (!passwordValidation.isValid) {
+    if (!isValidPassword(password)) {
       throw new ValidationError(
-        passwordValidation.errors?.join(', ') || 'Invalid password'
+        'Password must be at least 8 characters and ' +
+        'contain uppercase, lowercase, and numbers'
       );
     }
 
@@ -251,10 +251,10 @@ export class AuthService {
     }
 
     // Validate new password
-    const passwordValidation = isValidPassword(newPassword);
-    if (!passwordValidation.isValid) {
+    if (!isValidPassword(newPassword)) {
       throw new ValidationError(
-        passwordValidation.errors?.join(', ') || 'Invalid password'
+        'Password must be at least 8 characters and ' +
+        'contain uppercase, lowercase, and numbers'
       );
     }
 

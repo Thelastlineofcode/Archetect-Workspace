@@ -1,7 +1,9 @@
 import { Pool, PoolClient, QueryResult } from 'pg';
 import db from './connection';
 
-export abstract class BaseRepository<T> {
+export abstract class BaseRepository<
+  T extends Record<string, any> = any
+> {
   protected tableName: string;
   protected db: typeof db;
 
@@ -10,14 +12,14 @@ export abstract class BaseRepository<T> {
     this.db = db;
   }
 
-  protected async query<R = T>(
+  protected async query<R extends Record<string, any> = any>(
     text: string,
     params?: any[]
   ): Promise<QueryResult<R>> {
     return await this.db.query<R>(text, params);
   }
 
-  protected async queryOne<R = T>(
+  protected async queryOne<R extends Record<string, any> = any>(
     text: string,
     params?: any[]
   ): Promise<R | null> {
@@ -25,7 +27,7 @@ export abstract class BaseRepository<T> {
     return result.rows.length > 0 ? result.rows[0] : null;
   }
 
-  protected async queryMany<R = T>(
+  protected async queryMany<R extends Record<string, any> = any>(
     text: string,
     params?: any[]
   ): Promise<R[]> {

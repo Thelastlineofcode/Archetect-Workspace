@@ -40,18 +40,18 @@ export class CompatibilityService {
 
     // Calculate compatibility scores
     const archetypeCompatibility = this.calculateArchetypeCompatibility(
-      profile1.archetectType,
-      profile2.archetectType
+      profile1.archetectType!,
+      profile2.archetectType!
     );
 
     const energyCompatibility = this.calculateEnergyCompatibility(
-      profile1.energyStyle,
-      profile2.energyStyle
+      profile1.energyStyle!,
+      profile2.energyStyle!
     );
 
     const flowCompatibility = this.calculateFlowCompatibility(
-      profile1.flowMode,
-      profile2.flowMode
+      profile1.flowMode!,
+      profile2.flowMode!
     );
 
     // Overall compatibility (weighted average)
@@ -62,22 +62,22 @@ export class CompatibilityService {
 
     // Generate insights
     const complementarity = this.determineComplementarity(
-      profile1.archetectType,
-      profile2.archetectType
+      profile1.archetectType!,
+      profile2.archetectType!
     );
 
     const workingStyle = this.generateWorkingStyle(
-      profile1.archetectType,
-      profile2.archetectType,
-      profile1.flowMode,
-      profile2.flowMode
+      profile1.archetectType!,
+      profile2.archetectType!,
+      profile1.flowMode!,
+      profile2.flowMode!
     );
 
     const communicationTips = this.generateCommunicationTips(
-      profile1.energyStyle,
-      profile2.energyStyle,
-      profile1.archetectType,
-      profile2.archetectType
+      profile1.energyStyle!,
+      profile2.energyStyle!,
+      profile1.archetectType!,
+      profile2.archetectType!
     );
 
     const potentialChallenges = this.identifyPotentialChallenges(

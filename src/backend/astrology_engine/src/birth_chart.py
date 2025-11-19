@@ -5,11 +5,11 @@ Uses PyMeeus for sidereal calculations
 
 import json
 import sys
-from datetime import datetime, time
+from datetime import datetime
 from typing import Dict, Any
-import pytz
-from pymeeus import Sun, Moon
-from pymeeus.Epoch import Epoch
+import pytz  # pylint: disable=import-error
+from pymeeus import Sun, Moon  # pylint: disable=import-error
+from pymeeus.Epoch import Epoch  # pylint: disable=import-error
 
 # Lahiri Ayanamsha value (approximate for 2025)
 LAHIRI_AYANAMSHA = 24.15  # degrees
@@ -18,16 +18,25 @@ LAHIRI_AYANAMSHA = 24.15  # degrees
 class BirthChartCalculator:
     """Calculate sidereal birth chart from birth data"""
 
-    def __init__(self, birth_date: str, birth_time: str, latitude: float, longitude: float, timezone_str: str):
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        birth_date: str,
+        birth_time: str,
+        *,
+        latitude: float,
+        longitude: float,
+        timezone_str: str
+    ):
         """
         Initialize birth chart calculator
 
         Args:
             birth_date: YYYY-MM-DD format
             birth_time: HH:MM:SS format
-            latitude: Decimal degrees (-90 to 90)
-            longitude: Decimal degrees (-180 to 180)
-            timezone_str: IANA timezone string (e.g., 'America/New_York')
+            latitude: Decimal degrees (-90 to 90) (keyword-only)
+            longitude: Decimal degrees (-180 to 180) (keyword-only)
+            timezone_str: IANA timezone string (keyword-only)
+                (e.g., 'America/New_York')
         """
         self.birth_date = datetime.fromisoformat(birth_date).date()
         self.birth_time = datetime.strptime(birth_time, '%H:%M:%S').time()
@@ -43,7 +52,13 @@ class BirthChartCalculator:
         # Convert to Julian Day
         year = self.utc_dt.year
         month = self.utc_dt.month
-        day = self.utc_dt.day + (self.utc_dt.hour + self.utc_dt.minute/60.0 + self.utc_dt.second/3600.0) / 24.0
+        hours = self.utc_dt.hour
+        minutes = self.utc_dt.minute
+        seconds = self.utc_dt.second
+        day = (
+            self.utc_dt.day +
+            (hours + minutes/60.0 + seconds/3600.0) / 24.0
+        )
 
         self.epoch = Epoch(year, month, day)
 
@@ -71,14 +86,12 @@ class BirthChartCalculator:
         """Get modality for a zodiac sign"""
         cardinal = ['Aries', 'Cancer', 'Libra', 'Capricorn']
         fixed = ['Taurus', 'Leo', 'Scorpio', 'Aquarius']
-        mutable = ['Gemini', 'Virgo', 'Sagittarius', 'Pisces']
 
         if sign in cardinal:
             return 'Cardinal'
-        elif sign in fixed:
+        if sign in fixed:
             return 'Fixed'
-        else:
-            return 'Mutable'
+        return 'Mutable'
 
     @staticmethod
     def get_element(sign: str) -> str:
@@ -86,16 +99,14 @@ class BirthChartCalculator:
         fire = ['Aries', 'Leo', 'Sagittarius']
         earth = ['Taurus', 'Virgo', 'Capricorn']
         air = ['Gemini', 'Libra', 'Aquarius']
-        water = ['Cancer', 'Scorpio', 'Pisces']
 
         if sign in fire:
             return 'Fire'
-        elif sign in earth:
+        if sign in earth:
             return 'Earth'
-        elif sign in air:
+        if sign in air:
             return 'Air'
-        else:
-            return 'Water'
+        return 'Water'
 
     @staticmethod
     def get_nakshatra(longitude: float) -> tuple[str, str]:
@@ -204,8 +215,16 @@ class BirthChartCalculator:
 def main():
     """CLI interface for testing"""
     if len(sys.argv) < 6:
-        print("Usage: python birth_chart.py <date> <time> <lat> <lon> <timezone>")
-        print("Example: python birth_chart.py 1992-03-15 14:30:00 29.7604 -95.3698 'America/Chicago'")
+        usage_msg = (
+            "Usage: python birth_chart.py "
+            "<date> <time> <lat> <lon> <timezone>"
+        )
+        example_msg = (
+            "Example: python birth_chart.py "
+            "1992-03-15 14:30:00 29.7604 -95.3698 'America/Chicago'"
+        )
+        print(usage_msg)
+        print(example_msg)
         sys.exit(1)
 
     birth_date = sys.argv[1]
@@ -215,10 +234,16 @@ def main():
     timezone_str = sys.argv[5]
 
     try:
-        calculator = BirthChartCalculator(birth_date, birth_time, latitude, longitude, timezone_str)
+        calculator = BirthChartCalculator(
+            birth_date,
+            birth_time,
+            latitude=latitude,
+            longitude=longitude,
+            timezone_str=timezone_str
+        )
         chart = calculator.calculate_chart()
         print(json.dumps(chart, indent=2))
-    except Exception as e:
+    except (ValueError, KeyError, pytz.exceptions.UnknownTimeZoneError) as e:
         print(json.dumps({'error': str(e)}), file=sys.stderr)
         sys.exit(1)
 
